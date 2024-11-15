@@ -17,8 +17,6 @@ model Budget {
   id        Int      @id @default(autoincrement()) // Unique identifier
   name      String // Name of the budget (e.g., "Marketing Budget", "Annual Budget")
   amount    Float // The budget amount (e.g., 1000, 2500)
-  icon      String // URL or path to an icon image (or emoji) representing the budget
   createdBy String // The user or entity who created the budget
   createdAt DateTime @default(now()) // Date when the budget was created
-  updatedAt DateTime @updatedAt // Date when the budget was last updated
 }
