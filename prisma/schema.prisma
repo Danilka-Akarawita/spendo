@@ -14,9 +14,20 @@ datasource db {
 }
 
 model Budget {
-  id        Int      @id @default(autoincrement()) // Unique identifier
-  name      String // Name of the budget (e.g., "Marketing Budget", "Annual Budget")
-  amount    Float // The budget amount (e.g., 1000, 2500)
-  createdBy String // The user or entity who created the budget
-  createdAt DateTime @default(now()) // Date when the budget was created
+  id        Int      @id @default(autoincrement())
+  name      String
+  amount    Float
+  createdBy String
+  createdAt DateTime @default(now())
+
+  expenses Expenses[]
+}
+
+model Expenses {
+  id        Int    @id @default(autoincrement())
+  name      String
+  amount    Float
+  createdBy String
+  budgetId  Int
+  budget    Budget @relation(fields: [budgetId], references: [id])
 }

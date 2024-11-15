@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import CreateBudget from "./CreateBudget";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -21,15 +23,13 @@ function BudgetList() {
   const { user } = useUser();
 
   const onCreateBudget = async () => {
-  
     const sampleBudget = {
       name: name,
       amount: Amount ? parseFloat(Amount) : undefined,
       createdBy: user?.primaryEmailAddress?.emailAddress,
     };
-    
 
-    const response = await fetch('/api/budget', {
+    const response = await fetch("/api/budget", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,8 +41,7 @@ function BudgetList() {
       throw new Error("Failed to create budget");
     }
 
-    toast('New Budget Created!')
-    
+    toast("New Budget Created!");
   };
 
   return (
@@ -76,15 +75,20 @@ function BudgetList() {
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </div>
-              <Button
+              
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+            <Button
                 disabled={!(name && Amount)}
                 className="mt-5 w-full"
-                onClick={()=>onCreateBudget()}
+                onClick={() => onCreateBudget()}
               >
                 Create Budget
               </Button>
-            </DialogDescription>
-          </DialogHeader>
+            </DialogClose>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
