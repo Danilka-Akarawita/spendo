@@ -24,10 +24,10 @@ model Budget {
 }
 
 model Expenses {
-  id        Int    @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   name      String
   amount    Float
-  createdBy String
   budgetId  Int
-  budget    Budget @relation(fields: [budgetId], references: [id])
+  budget    Budget   @relation(fields: [budgetId], references: [id])
+  createdAt DateTime @default(now())
 }
