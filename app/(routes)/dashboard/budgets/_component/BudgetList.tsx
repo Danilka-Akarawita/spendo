@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 function BudgetList() {
   const [name, setName] = useState<string | undefined>();
@@ -40,8 +41,8 @@ function BudgetList() {
       throw new Error("Failed to create budget");
     }
 
-    const data = await response.json();
-    console.log(data);
+    toast('New Budget Created!')
+    
   };
 
   return (
