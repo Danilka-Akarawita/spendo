@@ -38,7 +38,7 @@ function CreateBudget() {
     if (!response.ok) {
       throw new Error("Failed to create budget");
     }
-
+    
     toast("New Budget Created!");
   };
   return (
