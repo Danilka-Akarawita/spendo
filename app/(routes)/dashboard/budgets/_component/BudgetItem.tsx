@@ -15,6 +15,10 @@ interface BudgetItemProps {
 }
 
 function BudgetItem({ budget }: BudgetItemProps) {
+  const calculateProgress=()=>{
+    const percenetage=(budget.totalSpent/budget.amount)*100;
+    return percenetage.toFixed(2);
+  }
   return (
     <Link href={'/dashboard/expenses/'+budget.id} className="p-5 border rounded-lg hover:shadow-md cursor-pointer mr-1 h-[170px]">
       <div className="flex gap-2 items-center justify-between">
@@ -30,7 +34,7 @@ function BudgetItem({ budget }: BudgetItemProps) {
             <h2 className="text-xs text-slate-400">${budget.remaining?budget.remaining:0}remaining</h2>
         </div>
         <div className="w-full bg-slate-300 h-2 rounded-full">
-            <div className="w-[40%] bg-primary h-2 rounded-full">
+            <div className="bg-primary h-2 rounded-full" style={{width:`${calculateProgress()}%`}}>
 
             </div>
         </div>
