@@ -3,6 +3,7 @@ import { useUser } from "@clerk/nextjs";
 import React, { useEffect, useState } from "react";
 import BudgetItem from "../../budgets/_component/BudgetItem";
 import AddExpense from "../_components/AddExpense";
+import ExpenseListTable from "../_components/ExpenseListTable";
 
 interface Params {
   params: {
@@ -19,12 +20,13 @@ export type Budget = {
   expensesCount: number;
   createdAt: Date;
 };
-interface BudgetItemProps {
-  budget: Budget;
-}
+
+
 function Expenses({ params }: Params) {
   const [id, setId] = useState<string | "">("");
   const [budgetInfo, setBudgetInfo] = useState<Budget | "">("");
+  const [ExpenseList, setExpenseList] = useState([]);
+
   const { user } = useUser();
 
   // Unwrap params asynchronously
@@ -36,14 +38,21 @@ function Expenses({ params }: Params) {
     fetchParams();
   }, [params]);
   const fetchBudgetInfo = async () => {
-    const response = await fetch(`/api/expenses/${id}`);
+    const response = await fetch(`/api/expenses/formatedBudget/${id}`);
     const data = await response.json();
     setBudgetInfo(data[0]);
     console.log(data);
   };
+  const fetchExpensesInfo = async () => {
+    const response = await fetch(`/api/expenses/${id}`);
+    const data = await response.json();
+    setExpenseList(data);
+    console.log("Expenses ", data);
+  };
   useEffect(() => {
     if (id) {
       fetchBudgetInfo();
+      fetchExpensesInfo();
     }
   }, [id]);
 
@@ -57,6 +66,11 @@ function Expenses({ params }: Params) {
           <div className="h-[150px] w-full bg-slate-200 rounded-lg animate-pulse"></div>
         )}
         <AddExpense budgetId={id} refreshData={fetchBudgetInfo} />
+      </div>
+      <div className="mt-4">
+        <h2 className="font-bold text-lg">Latest Expenses</h2>
+        <ExpenseListTable expenseListData={ExpenseList} />
+
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ function AddExpense({budgetId, refreshData }: Budgetprops) {
       budgetId: budgetId,
     };
 
-    const response = await fetch(`/api/expenses/${budgetId}`, {
+    const response = await fetch(`/api/expenses/formatedBudget/${budgetId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +28,7 @@ function AddExpense({budgetId, refreshData }: Budgetprops) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to create budget");
+      throw new Error("Failed to create expense");
     }
     refreshData();
 
