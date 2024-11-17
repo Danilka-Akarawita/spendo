@@ -24,7 +24,7 @@ interface BudgetItemProps {
 }
 function Expenses({ params }: Params) {
   const [id, setId] = useState<string | "">("");
-  const [budgetInfo, setBudgetInfo] = useState<Budget | ''>('');
+  const [budgetInfo, setBudgetInfo] = useState<Budget | "">("");
   const { user } = useUser();
 
   // Unwrap params asynchronously
@@ -35,17 +35,15 @@ function Expenses({ params }: Params) {
     };
     fetchParams();
   }, [params]);
-
+  const fetchBudgetInfo = async () => {
+    const response = await fetch(`/api/expenses/${id}`);
+    const data = await response.json();
+    setBudgetInfo(data[0]);
+    console.log(data);
+  };
   useEffect(() => {
     if (id) {
-      const fetchudgetInfo = async () => {
-        const response = await fetch(`/api/expenses/${id}`);
-        const data = await response.json();
-        setBudgetInfo(data[0]);
-        console.log(data);
-      };
-
-      fetchudgetInfo();
+      fetchBudgetInfo();
     }
   }, [id]);
 
@@ -53,12 +51,12 @@ function Expenses({ params }: Params) {
     <div className="p-10">
       <h2 className="text-2xl font-bold">Expense ID</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 mt-6">
-      {budgetInfo ? (
+        {budgetInfo ? (
           <BudgetItem budget={budgetInfo} />
         ) : (
-          <div className="h-[150px] w-full bg-slate-200 rounded-lg animate-pulse"></div> 
+          <div className="h-[150px] w-full bg-slate-200 rounded-lg animate-pulse"></div>
         )}
-        <AddExpense budgetId={id}/>
+        <AddExpense budgetId={id} refreshData={fetchBudgetInfo} />
       </div>
     </div>
   );

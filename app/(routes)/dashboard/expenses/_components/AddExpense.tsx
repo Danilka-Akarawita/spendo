@@ -5,9 +5,10 @@ import { toast } from "sonner";
 
 export type Budgetprops = {
     budgetId:string 
+    refreshData:() => void;
 }
 
-function AddExpense({ budgetId }: Budgetprops) {
+function AddExpense({budgetId, refreshData }: Budgetprops) {
   const [name, setName] = useState<string | undefined>();
   const [Amount, setAmount] = useState<string | undefined>();
   
@@ -29,6 +30,7 @@ function AddExpense({ budgetId }: Budgetprops) {
     if (!response.ok) {
       throw new Error("Failed to create budget");
     }
+    refreshData();
 
     toast("New Budget Created!");
   };
