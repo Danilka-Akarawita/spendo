@@ -1,5 +1,6 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 
 type Params = Promise<{ id: string }>;
 
@@ -48,4 +49,32 @@ export async function GET(
       { status: 500 }
     );
   }
+}
+
+const schema = z.object({
+  name: z.string(),
+  amount: z.number().positive(),
+  budgetId: z.string(),
+});
+
+type ExpenseData = z.infer<typeof schema>;
+
+export async function POST(request: NextRequest) {
+  // Parse and validate the request body
+  const body: ExpenseData = await request.json();
+  const validation = schema.safeParse(body);
+
+  if (!validation.success) {
+    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+  }
+
+  const expense = await prisma.expenses.create({
+    data: {
+      name: validation.data.name,
+      amount: validation.data.amount,
+      budgetId:parseInt(validation.data.budgetId,10)
+    },
+  });
+
+  return NextResponse.json(expense, { status: 201 });
 }

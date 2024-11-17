@@ -1,12 +1,40 @@
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import React, { useState } from "react";
+import { toast } from "sonner";
 
-function AddExpense() {
-    const [name, setName] = useState<string | undefined>();
-    const [Amount, setAmount] = useState<string | undefined>();
+export type Budgetprops = {
+    budgetId:string 
+}
+
+function AddExpense({ budgetId }: Budgetprops) {
+  const [name, setName] = useState<string | undefined>();
+  const [Amount, setAmount] = useState<string | undefined>();
+  
+  const onCreateBudget = async () => {
+    const sampleBudget = {
+      name: name,
+      amount: Amount ? parseFloat(Amount) : undefined,
+      budgetId: budgetId,
+    };
+
+    const response = await fetch(`/api/expenses/${budgetId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(sampleBudget),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create budget");
+    }
+
+    toast("New Budget Created!");
+  };
+
   return (
-    <div className="border p-5 rounded-lg gap-2">
+    <div className="border p-5 rounded-lg">
       <div className="ml-2">
         <div className="font-bold text-lg">AddExpense</div>
 
@@ -29,12 +57,12 @@ function AddExpense() {
           />
         </div>
         <Button
-                disabled={!(name && Amount)}
-                className="mt-5 w-full"
-                //onClick={() => onCreateBudget()}
-              >
-                Create Budget
-              </Button>
+          disabled={!(name && Amount)}
+          className="mt-5 w-full"
+          onClick={() => onCreateBudget()}
+        >
+          Create Budget
+        </Button>
       </div>
     </div>
   );

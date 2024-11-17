@@ -16,7 +16,7 @@ interface BudgetItemProps {
 
 function BudgetItem({ budget }: BudgetItemProps) {
   return (
-    <Link href={'/dashboard/expenses/'+budget.id} className="p-5 border rounded-lg hover:shadow-md cursor-pointer">
+    <Link href={'/dashboard/expenses/'+budget.id} className="p-5 border rounded-lg hover:shadow-md cursor-pointer mr-1 h-[170px]">
       <div className="flex gap-2 items-center justify-between">
         <div className=" gap-2 items-center">
           <h2 className="font-bold">{budget.name}</h2>

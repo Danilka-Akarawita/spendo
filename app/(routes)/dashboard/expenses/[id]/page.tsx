@@ -58,7 +58,7 @@ function Expenses({ params }: Params) {
         ) : (
           <div className="h-[150px] w-full bg-slate-200 rounded-lg animate-pulse"></div> 
         )}
-        <AddExpense/>
+        <AddExpense budgetId={id}/>
       </div>
     </div>
   );
