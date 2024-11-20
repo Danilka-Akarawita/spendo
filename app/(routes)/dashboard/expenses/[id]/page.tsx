@@ -49,6 +49,11 @@ function Expenses({ params }: Params) {
     setExpenseList(data);
     console.log("Expenses ", data);
   };
+
+  const refreshData = async () => {
+    await fetchBudgetInfo();
+    await fetchExpensesInfo();
+  };
   useEffect(() => {
     if (id) {
       fetchBudgetInfo();
@@ -65,11 +70,11 @@ function Expenses({ params }: Params) {
         ) : (
           <div className="h-[150px] w-full bg-slate-200 rounded-lg animate-pulse"></div>
         )}
-        <AddExpense budgetId={id} refreshData={fetchBudgetInfo} />
+        <AddExpense budgetId={id} refreshData={refreshData} />
       </div>
       <div className="mt-4">
         <h2 className="font-bold text-lg">Latest Expenses</h2>
-        <ExpenseListTable expenseListData={ExpenseList} />
+        <ExpenseListTable expenseListData={ExpenseList} refreshData={refreshData} />
 
       </div>
     </div>
