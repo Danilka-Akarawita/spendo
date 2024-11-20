@@ -25,7 +25,7 @@ interface ExpenseDataProps {
 function ExpenseListTable({ expenseListData, refreshData }: ExpenseDataProps) {
   const deleteExpense = async (expenseId: number) => {
     const response = await fetch(`/api/expenses/delete/${expenseId}`, {
-      method: "DeLETE",
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },

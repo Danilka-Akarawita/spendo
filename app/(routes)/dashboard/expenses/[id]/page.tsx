@@ -4,6 +4,21 @@ import React, { useEffect, useState } from "react";
 import BudgetItem from "../../budgets/_component/BudgetItem";
 import AddExpense from "../_components/AddExpense";
 import ExpenseListTable from "../_components/ExpenseListTable";
+import { Button } from "@/components/ui/Button";
+import { Trash } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/Alert";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Params {
   params: {
@@ -21,15 +36,12 @@ export type Budget = {
   createdAt: Date;
 };
 
-
 function Expenses({ params }: Params) {
   const [id, setId] = useState<string | "">("");
   const [budgetInfo, setBudgetInfo] = useState<Budget | "">("");
   const [ExpenseList, setExpenseList] = useState([]);
+  const route=useRouter();
 
-  const { user } = useUser();
-
-  // Unwrap params asynchronously
   useEffect(() => {
     const fetchParams = async () => {
       const resolvedParams = await params;
@@ -60,10 +72,51 @@ function Expenses({ params }: Params) {
       fetchExpensesInfo();
     }
   }, [id]);
+ 
+  const deleteBudget=async()=>{
+    
+    const response = await fetch(`/api/budget/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
+    if (!response.ok) {
+      throw new Error("Failed to delete  expense");
+    }
+    
+    toast("budget Deleted!");
+    route.replace('/dashboard/budgets');
+  }
   return (
     <div className="p-10">
-      <h2 className="text-2xl font-bold">Expense ID</h2>
+      <h2 className="text-2xl font-bold flex justify-between items-center">
+        My Expenses
+        <span>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button className="flex gap-2" variant="destructive">
+                <Trash />
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your budget and the data 
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={deleteBudget}>Continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </span>
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 mt-6">
         {budgetInfo ? (
           <BudgetItem budget={budgetInfo} />
@@ -74,8 +127,10 @@ function Expenses({ params }: Params) {
       </div>
       <div className="mt-4">
         <h2 className="font-bold text-lg">Latest Expenses</h2>
-        <ExpenseListTable expenseListData={ExpenseList} refreshData={refreshData} />
-
+        <ExpenseListTable
+          expenseListData={ExpenseList}
+          refreshData={refreshData}
+        />
       </div>
     </div>
   );
