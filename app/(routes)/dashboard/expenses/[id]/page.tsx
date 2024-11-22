@@ -5,7 +5,7 @@ import BudgetItem from "../../budgets/_component/BudgetItem";
 import AddExpense from "../_components/AddExpense";
 import ExpenseListTable from "../_components/ExpenseListTable";
 import { Button } from "@/components/ui/Button";
-import { Trash } from "lucide-react";
+import { Pen, PenBox, Trash } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/Alert";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import EditBudget from "../_components/EditBudget";
 
 interface Params {
   params: {
@@ -40,7 +41,7 @@ function Expenses({ params }: Params) {
   const [id, setId] = useState<string | "">("");
   const [budgetInfo, setBudgetInfo] = useState<Budget | "">("");
   const [ExpenseList, setExpenseList] = useState([]);
-  const route=useRouter();
+  const route = useRouter();
 
   useEffect(() => {
     const fetchParams = async () => {
@@ -72,9 +73,8 @@ function Expenses({ params }: Params) {
       fetchExpensesInfo();
     }
   }, [id]);
- 
-  const deleteBudget=async()=>{
-    
+
+  const deleteBudget = async () => {
     const response = await fetch(`/api/budget/delete/${id}`, {
       method: "DELETE",
       headers: {
@@ -85,36 +85,46 @@ function Expenses({ params }: Params) {
     if (!response.ok) {
       throw new Error("Failed to delete  expense");
     }
-    
+
     toast("budget Deleted!");
-    route.replace('/dashboard/budgets');
-  }
+    route.replace("/dashboard/budgets");
+  };
   return (
     <div className="p-10">
       <h2 className="text-2xl font-bold flex justify-between items-center">
         My Expenses
         <span>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className="flex gap-2" variant="destructive">
-                <Trash />
-                Delete
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  your budget and the data 
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={deleteBudget}>Continue</AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <div className="flex gap-2 items-center">
+            {budgetInfo && (
+              <EditBudget
+                budgetInfo={budgetInfo}
+                refreshData={fetchBudgetInfo}
+              />
+            )}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className="flex gap-2" variant="destructive">
+                  <Trash />
+                  Delete
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your budget and the data
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={deleteBudget}>
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </span>
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 mt-6">
