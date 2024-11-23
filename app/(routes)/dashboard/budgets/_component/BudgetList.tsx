@@ -11,7 +11,7 @@ function BudgetList() {
     if (user) {
       const fetchBudgetList = async () => {
         const response = await fetch(
-          `/api/budget/${user.primaryEmailAddress?.emailAddress}`
+          `/api/budget`
         );
         const data = await response.json();
         setBudgetLists(data);
