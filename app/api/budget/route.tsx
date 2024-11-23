@@ -1,10 +1,11 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { currentUser } from "@clerk/nextjs/server";
+import { z } from "zod";
 
 export async function GET(request: NextRequest) {
   const user = await currentUser();
-  console.log( user?.primaryEmailAddress?.emailAddress);
+  console.log(user?.primaryEmailAddress?.emailAddress);
 
   try {
     const budgets = await prisma.budget.findMany({
@@ -43,4 +44,32 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+const schema = z.object({
+  name: z.string(),
+  amount: z.number().positive(),
+  createdBy: z.string().email(),
+});
+
+type BudgetData = z.infer<typeof schema>;
+
+export async function POST(request: NextRequest) {
+  // Parse and validate the request body
+  const body: BudgetData = await request.json();
+  const validation = schema.safeParse(body);
+
+  if (!validation.success) {
+    return NextResponse.json({ error: "Invalid data" }, { status: 400 });
+  }
+
+  const budget = await prisma.budget.create({
+    data: {
+      name: validation.data.name,
+      amount: validation.data.amount,
+      createdBy: validation.data.createdBy,
+    },
+  });
+
+  return NextResponse.json(budget, { status: 201 });
 }

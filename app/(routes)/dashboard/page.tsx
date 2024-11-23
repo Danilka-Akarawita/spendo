@@ -20,7 +20,7 @@ function Dashboard() {
     if (user){
       fetchBudgetList();
     }
-  })
+  }, [user])
 
   return (
     <div className='p-5'>
