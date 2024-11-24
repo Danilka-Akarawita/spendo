@@ -21,12 +21,6 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import EditBudget from "../_components/EditBudget";
 
-interface Params {
-  params: {
-    id: string;
-  };
-}
-
 export type Budget = {
   id: number;
   name: string;
@@ -37,25 +31,29 @@ export type Budget = {
   createdAt: Date;
 };
 
-function Expenses({ params }: Params) {
-  const [id, setId] = useState<string | "">("");
-  const [budgetInfo, setBudgetInfo] = useState<Budget | "">("");
+
+interface Params {
+  id: string;
+}
+
+function Expenses({ params }: { params: Params }) {
+  const [id, setId] = useState<string>("");
+  const [budgetInfo, setBudgetInfo] = useState<Budget | null>(null);
   const [ExpenseList, setExpenseList] = useState([]);
   const route = useRouter();
 
   useEffect(() => {
-    const fetchParams = async () => {
-      const resolvedParams = await params;
-      setId(resolvedParams.id);
-    };
-    fetchParams();
+    
+    setId(params.id);
   }, [params]);
+
   const fetchBudgetInfo = async () => {
     const response = await fetch(`/api/expenses/formatedBudget/${id}`);
     const data = await response.json();
     setBudgetInfo(data[0]);
     console.log(data);
   };
+
   const fetchExpensesInfo = async () => {
     const response = await fetch(`/api/expenses/${id}`);
     const data = await response.json();
@@ -67,6 +65,7 @@ function Expenses({ params }: Params) {
     await fetchBudgetInfo();
     await fetchExpensesInfo();
   };
+
   useEffect(() => {
     if (id) {
       fetchBudgetInfo();
@@ -83,12 +82,13 @@ function Expenses({ params }: Params) {
     });
 
     if (!response.ok) {
-      throw new Error("Failed to delete  expense");
+      throw new Error("Failed to delete expense");
     }
 
-    toast("budget Deleted!");
+    toast("Budget Deleted!");
     route.replace("/dashboard/budgets");
   };
+
   return (
     <div className="p-10">
       <h2 className="text-2xl font-bold flex justify-between items-center">
