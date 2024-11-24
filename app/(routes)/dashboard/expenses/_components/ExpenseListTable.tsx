@@ -39,6 +39,7 @@ function ExpenseListTable({ expenseListData, refreshData }: ExpenseDataProps) {
   };
   return (
     <div className="mt-4">
+      <h2 className="font-bold text-lg">Latest Expenses</h2>
       <Table>
         <TableHeader>
           <TableRow>

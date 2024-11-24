@@ -1,5 +1,5 @@
 import { Bar, BarChart, Legend, Tooltip, XAxis, YAxis } from "recharts";
-import React from "react";
+import React, { useEffect } from "react";
 export type Budget = {
   id: number;
   name: string;
@@ -12,13 +12,18 @@ export type Budget = {
 
 interface BudgetDataProp {
   budgetInfo: Budget[];
+  refreshData: () => void;
 }
 
-function ChartsDashboard({ budgetInfo }: BudgetDataProp) {
+function ChartsDashboard({ budgetInfo, refreshData }: BudgetDataProp) {
+  useEffect(() => {
+    refreshData();
+  });
+
   return (
     <div className="border rounded-lg p-5">
-        <h2 className="font-bold text-lg">Acivity</h2>
-      <BarChart width={500} height={300} data={budgetInfo} margin={{top:8}}>
+      <h2 className="font-bold text-lg">Acivity</h2>
+      <BarChart width={500} height={300} data={budgetInfo} margin={{ top: 8 }}>
         <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
