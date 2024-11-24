@@ -19,7 +19,7 @@ const Header: React.FC = () => {
       />
       {isSignedIn?
       <UserButton/>:
-      <Link href={'/sign-in'}>
+      <Link href='/sign-in'>
       <Button variant="default">Get Started</Button>
       </Link>}
       
