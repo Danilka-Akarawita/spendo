@@ -17,16 +17,15 @@ COPY . .
 RUN npm run build
 
 # Step 7: Prepare the production environment
-FROM node:18-alpine AS production
-
+#FROM node:18-alpine AS production
 # Set working directory for production
-WORKDIR /app
+#WORKDIR /app
 
 # Step 8: Copy only necessary files from the builder image
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/node_modules ./node_modules
+#COPY --from=builder /app/package*.json ./
+#COPY --from=builder /app/.next ./.next
+#COPY --from=builder /app/public ./public
+#COPY --from=builder /app/node_modules ./node_modules
 
 # Step 9: Expose the port your app will run on
 EXPOSE 3000
